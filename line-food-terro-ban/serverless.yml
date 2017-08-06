@@ -1,0 +1,30 @@
+service: line-rekognition
+provider:
+  name: aws
+  runtime: nodejs4.3
+  memorySize: 512
+  timeout: 60
+  stage: dev
+  region: us-east-1
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - "rekognition:*"
+      Resource:
+        - "*"
+
+functions:
+  hello:
+    handler: handler.hello
+    environment:
+      CHANNEL_ID: ''
+      CHANNEL_SECRET: ''
+      CHANNEL_TOKEN: ''
+
+    events:
+      - http:
+          path: /
+          method: post
+
+plugins:
+  - serverless-run-function-plugin
