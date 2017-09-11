@@ -1,0 +1,37 @@
+service: gcp-backup-cron
+
+provider:
+  name: aws
+  runtime: nodejs4.3
+  memorySize: 128
+  timeout: 20
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - logs:*
+        - cloudwatch:*
+      Resource:
+        - "*"
+  stage: dev
+  region: ap-northeast-1
+
+functions:
+  createSnapshot:
+    handler: create.createSnapshot
+    environment:
+      PROJECT_ID:
+      CREDENTIALS_FILE_PATH:
+      INSTANCE_ZONE:
+      INSTANCE_DISK_NAME:
+    events:
+      - schedule: cron(5 2 * * ? *)
+
+  deleteSnapshot:
+    handler: delete.deleteSnapshot
+    environment:
+      PROJECT_ID:
+      CREDENTIALS_FILE_PATH:
+      INSTANCE_ZONE:
+      INSTANCE_DISK_NAME:
+    events:
+      - schedule: cron(5 2 * * ? *)
