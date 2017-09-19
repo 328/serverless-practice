@@ -1,0 +1,28 @@
+service: github-pr-notification
+provider:
+  name: aws
+  runtime: nodejs6.10
+  timeout: 20
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - logs:CreateLogGroup
+        - logs:CreateLogStream
+        - logs:PutLogEvents
+      Resource:
+        - "arn:aws:logs:*:*:*"
+  stage: prod
+  region: ap-northeast-1
+
+functions:
+  hello:
+    handler: handler.hello
+    environment:
+      WEBHOOK_URL: ''
+      CHANNEL: ""
+      USERNAME: ""
+
+    events:
+      - http:
+          path: /
+          method: post
